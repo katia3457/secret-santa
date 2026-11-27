@@ -43,7 +43,13 @@ form.addEventListener("submit", async (event) => {
             throw new Error(result.detail || "Ошибка регистрации");
         }
 
-        alert("Ты успешно зарегистрирован!");
+    document.querySelector(".registration-form").hidden = true;
+
+    document.getElementById("success-card").hidden = false;
+
+    document.getElementById("success-card").scrollIntoView({
+        behavior: "smooth"
+});
         form.reset();
 
     } catch (error) {
@@ -98,3 +104,9 @@ if (window.Telegram && window.Telegram.WebApp) {
     console.log("Сайт открыт вне Telegram");
 }
 
+document.getElementById("back-home").addEventListener("click", function () {
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+});

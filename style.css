@@ -269,3 +269,140 @@ footer {
         font-size: 43px;
     }
 }
+
+/* Снегопад на всём сайте */
+.snow-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 9999;
+}
+
+.snowflake {
+    position: absolute;
+    top: -20px;
+    color: #b8c9d9;
+    text-shadow: 0 1px 3px rgba(70, 100, 130, 0.35);
+    user-select: none;
+    pointer-events: none;
+    animation: snowfall linear infinite;
+}
+
+@keyframes snowfall {
+    0% {
+        transform: translateY(-20px) translateX(0);
+    }
+    100% {
+        transform: translateY(110vh) translateX(40px);
+    }
+}
+
+
+
+/* Рождественские шарики */
+.christmas-decor {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 10;
+}
+
+.ornament {
+    position: absolute;
+    display: block;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-size: 0;
+    background: radial-gradient(
+        circle at 30% 25%,
+        #ff9b9b,
+        #c62828 45%,
+        #790d1b 100%
+    );
+    box-shadow:
+        inset -4px -5px 8px rgba(0, 0, 0, 0.25),
+        0 3px 8px rgba(0, 0, 0, 0.2);
+    transform-origin: top center;
+    animation: ornament-swing 3s ease-in-out infinite alternate;
+}
+
+.ornament::before {
+    content: "";
+    position: absolute;
+    width: 8px;
+    height: 6px;
+    background: #d4af37;
+    top: -5px;
+    left: 10px;
+    border-radius: 3px 3px 0 0;
+}
+
+.ornament-1 { top: 12%; left: 8%; }
+.ornament-2 { top: 25%; right: 9%; width: 36px; height: 36px; }
+.ornament-3 { top: 55%; left: 4%; width: 22px; height: 22px; }
+.ornament-4 { top: 70%; right: 5%; }
+.ornament-5 { top: 88%; left: 18%; width: 24px; height: 24px; }
+
+@keyframes ornament-swing {
+    (rotate: -8deg; )
+    to (rotate: 8deg; )
+}
+
+.success-card {
+    background: #f5f0e4;
+    color: #234b38;
+    border: 2px solid #d9c18a;
+    border-radius: 24px;
+    padding: 25px;
+    margin: 20px auto;
+    max-width: 400px;
+    box-sizing: border-box;
+    text-align: center;
+    box-shadow: 0 8px 25px #00000020;
+    animation: cardAppear 0.6s ease;
+}
+
+.success-card[hidden] {
+    display: none;
+}
+
+.success-icon {
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+
+.success-card h2 {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.success-card p {
+    line-height: 1.6;
+}
+
+.success-budget {
+    background: #e9dfc5;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: bold;
+}
+
+.success-card button {
+    width: 100%;
+    margin-top: 15px;
+}
+
+@keyframes cardAppear {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
