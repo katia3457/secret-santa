@@ -434,3 +434,42 @@ def test_message(
     )
 
     return {"success": sent}
+
+from fastapi import Header
+
+WEBHOOK_SECRET = os.getenv("WEBHOOK_SECRET")
+
+
+@app.post("/telegram-webhook")
+def telegram_webhook(
+    update: dict,
+    x_telegram_bot_api_secret_token: str = Header(default="")
+):
+    if not WEBHOOK_SECRET or not secrets.compare_digest(
+        x_telegram_bot_api_secret_token,
+        WEBHOOK_SECRET
+    ):
+        raise HTTPException(
+            status_code=403,
+            detail="Access denied"
+        )
+
+    message = update.get("message", {})
+    chat = message.get("chat", {})
+    chat_id = chat.get("id")
+    text = message.get("text", "")
+
+    if chat_id and chat.get("type") == "private":
+        if text.split()[:1] == ["/start"]:
+            send_telegram_message(
+                chat_id,
+                "🎄 Добро пожаловать в игру "
+                "«Тайный Санта»!\n\n"
+                "✨ Стань частью новогоднего волшебства!\n\n"
+                "🎁 Бюджет подарка: до 1 000 ₽.\n\n"
+                "💌 Зарегистрируйся и оставь пожелания.\n\n"
+                "🎅 Открыть игру:\n"
+                "https://t.me/TheNewYearIsNear_bot/SecretSanta"
+            )
+
+    return {"ok": True}
