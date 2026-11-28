@@ -473,3 +473,25 @@ def telegram_webhook(
             )
 
     return {"ok": True}
+
+@app.post("/admin/setup-webhook")
+def setup_webhook(
+    admin: bool = Depends(verify_admin)
+):
+    if not TELEGRAM_BOT_TOKEN or not WEBHOOK_SECRET:
+        raise HTTPException(
+            status_code=500,
+            detail="Webhook не настроен"
+        )
+
+    response = httpx.post(
+        f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/setWebhook",
+        json={
+            "url": os.environ["RENDER_EXTERNAL_URL"] + "/telegram-webhook",
+            "secret_token": WEBHOOK_SECRET,
+            "allowed_updates": ["message"]
+        },
+        timeout=15
+    )
+
+    return response.json()
