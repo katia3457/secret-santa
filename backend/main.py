@@ -5,7 +5,7 @@ import secrets
 import hmac
 import hashlib
 import json
-import time
+import httpx
 from urllib.parse import parse_qsl
 from fastapi import Depends
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
@@ -19,6 +19,32 @@ load_dotenv()
 
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 
+def send_telegram_message(telegram_id, text):
+    if not TELEGRAM_BOT_TOKEN:
+        return False
+
+    url = (
+        f"https://api.telegram.org/bot"
+        f"{TELEGRAM_BOT_TOKEN}/sendMessage"
+    )
+
+    try:
+        response = httpx.post(
+            url,
+            json={
+                "chat_id": telegram_id,
+                "text": text
+            },
+            timeout=10
+        )
+
+        return (
+            response.is_success
+            and response.json().get("ok", False)
+        )
+
+    except Exception:
+        return False
 
 def verify_telegram_data(init_data: str):
     if not TELEGRAM_BOT_TOKEN:
@@ -210,7 +236,18 @@ def register_participant(participant: Participant):
             "telegram_id": telegram_id,
             "telegram_username": telegram,
             "wishes": wishes
+            
         }).execute()
+
+        send_telegram_message(
+            telegram_id,
+            f"🎄 Поздравляем, {name}!\n\n"
+            "Ты официально участвуешь в игре "
+            "«Тайный Санта»!\n\n"
+            "🎁 Бюджет подарка: до 1 000 ₽.\n\n"
+            "✨ Ожидай начала жеребьёвки!\n"
+            "🤫 Не раскрывай свою личность."
+        )
 
         return {
             "success": True,
