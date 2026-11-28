@@ -420,3 +420,17 @@ def telegram_visit(data: dict):
             status_code=500,
             detail="Не удалось записать посещение"
         )
+        
+@app.post("/admin/test-message")
+def test_message(
+    telegram_id: int,
+    admin: bool = Depends(verify_admin)
+):
+    sent = send_telegram_message(
+        telegram_id,
+        "🎅 Привет! Это тестовое сообщение "
+        "от твоего Тайного Санты!\n\n"
+        "🎄 Наш бот работает!"
+    )
+
+    return {"success": sent}
